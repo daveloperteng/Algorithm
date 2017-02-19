@@ -1,0 +1,136 @@
+package dynamicProgramming;
+
+/**
+ * Created by da.teng on 2/16/17.
+ */
+public class dp {
+
+    /*Fibonacci*/
+    public static int fibonacci(int num) {
+        int[] buff = new int[num + 1];
+        buff[1] = 1;
+        buff[2] = 1;
+
+        return fibonacci(buff, num);
+    }
+
+    private static int fibonacci(int[] buff, int num) {
+        if (buff[num] != 0) {
+            return buff[num];
+        }
+
+        buff[num] = fibonacci(buff, num - 1) + fibonacci(buff, num - 2);
+        return buff[num];
+    }
+
+    /**
+     * Question: paint grid with red, blue, green. green can't be next to blue. how many possible ways?*/
+
+    //top down
+    public static int paintGrid1(int length) {
+        int[][] buff = new int[length+1][4];
+        buff[1][1] = 1;
+        buff[1][2] = 1;
+        buff[1][3] = 1;
+
+        return paintGrid1Helper(buff, length, 1) + paintGrid1Helper(buff, length, 2) + paintGrid1Helper(buff, length, 3);
+    }
+
+    private static int paintGrid1Helper(int[][] buff, int step, int color) {
+        if (buff[step][color] != 0) {
+            return buff[step][color];
+        }
+
+        if (color == 1) {
+            buff[step][1] = paintGrid1Helper(buff, step - 1, 1) + paintGrid1Helper(buff, step - 1, 3);
+        }
+
+        if (color == 2) {
+            buff[step][2] = paintGrid1Helper(buff, step - 1, 2) + paintGrid1Helper(buff, step - 1, 3);
+        }
+
+        if (color == 3) {
+            buff[step][3] = paintGrid1Helper(buff, step - 1, 1) + paintGrid1Helper(buff, step - 1, 2)
+                    + paintGrid1Helper(buff, step - 1, 3);
+        }
+
+        return buff[step][color];
+    }
+
+    /**
+     * an int[][] if the value is 0, it means, you can pass that, if the value is 1, it is a block.
+     * starting from [0][0] to [length-1][length-1], how many possible ways*/
+    public static int dpGrid(int[][] grids) {
+        return dpGridHelper(grids, 0, 0, grids.length - 1);
+    }
+
+    private static int dpGridHelper(int[][] grids, int x, int y, int boundary) {
+        if (x == boundary && y == boundary) {
+            return 1;
+        }
+
+        if (grids[x][y] == 1) {
+            return 0;
+        }
+
+        if (y == boundary) {
+            return dpGridHelper(grids, x + 1, y, boundary);
+        }
+
+        if (x == boundary) {
+            return dpGridHelper(grids, y + 1, x, boundary);
+        }
+
+        return dpGridHelper(grids, x + 1, y, boundary) + dpGridHelper(grids, x, y + 1, boundary);
+
+    }
+
+    /**Given int[][] with numbers on it,
+     * from start(0,0) to end(bottom right), what is the max values it will pass*/
+    public static int maxPath(int[][] grids) {
+        return maxPathHelper(grids, 0, 0, grids.length - 1, 0);
+    }
+
+    private static int maxPathHelper(int[][] grids, int x, int y, int boundary, int sum) {
+        sum += grids[x][y];
+
+        if(x == boundary && y == boundary) {
+            return sum;
+        }
+
+        if (x == boundary) {
+            return maxPathHelper(grids, x, y + 1, boundary, sum);
+        }
+
+        if (y == boundary) {
+            return maxPathHelper(grids, x + 1, y, boundary, sum);
+        }
+
+        return Math.max(maxPathHelper(grids, x + 1, y, boundary, sum), maxPathHelper(grids, x, y + 1, boundary, sum));
+
+    }
+
+    public static void main(String[] args) {
+        System.out.print(fibonacci(8));
+        System.out.print(paintGrid1(2));
+
+        int[][] grids = new int[4][4];
+        grids[1][2] = 1;
+        grids[3][0] = 1;
+
+//        System.out.print(dpGrid(grids));
+
+        int[][] maxGrids = new int [3][3];
+        maxGrids[0][0] = 1;
+        maxGrids[0][1] = 3;
+        maxGrids[0][2] = 5;
+        maxGrids[1][0] = 2;
+        maxGrids[1][1] = 1;
+        maxGrids[1][2] = 4;
+        maxGrids[2][0] = 6;
+        maxGrids[2][1] = 3;
+        maxGrids[2][2] = 2;
+
+        System.out.print(maxPath(maxGrids));
+    }
+}
