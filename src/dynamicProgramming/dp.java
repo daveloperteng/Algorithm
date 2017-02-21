@@ -118,7 +118,7 @@ public class dp {
         grids[1][2] = 1;
         grids[3][0] = 1;
 
-//        System.out.print(dpGrid(grids));
+        System.out.print(dpGrid(grids));
 
         int[][] maxGrids = new int [3][3];
         maxGrids[0][0] = 1;
