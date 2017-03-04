@@ -1,7 +1,6 @@
 package linkedList;
 
 import java.util.HashSet;
-import java.util.NoSuchElementException;
 
 /**
  * Created by da.teng on 2/20/17.
